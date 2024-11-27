@@ -2,7 +2,7 @@
 
 sudo mkdir -p /mnt/epic_exchange
 sudo chmod 777 /mnt/epic_exchange
-sudo mount -t nfs -o vers=3 ${FA_MOUNT_IP}:/EXCHANGE /mnt/epic_exchange/
+sudo mount -t nfs -o vers=3 ${FA_MOUNT_IP}:/EXCHANGE_ALL /mnt/epic_exchange/
 
 if [ "$#" != "1" -o -z "$1" ]; then
     echo "Usage: $0 setup"
@@ -18,8 +18,10 @@ fi
 if [ "$1" = "setup" ]; then
     sudo mkdir /mnt/epic_exchange/export
     sudo chown 2101:2100 /mnt/epic_exchange/export
+    sudo chmod 744 /mnt/epic_exchange/export
     sudo mkdir /mnt/epic_exchange/import
     sudo chown 2101:2100 /mnt/epic_exchange/import
+    sudo chmod 777 /mnt/epic_exchange/import
 fi
 
 sudo umount /mnt/epic_exchange
