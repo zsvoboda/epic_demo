@@ -60,7 +60,7 @@ purefs create fs_epic
 puredir create --path /home fs_epic:md_epic_exchange
 
 # NFS export policy
-purepolicy nfs create p_exchange_dir_nfs
+purepolicy nfs create --disable-user-mapping p_exchange_dir_nfs
 purepolicy nfs rule add --client "*" --all-squash --anonuid 2101 --anongid 2100 --version nfsv3 p_exchange_dir_nfs
 
 # NFS export
