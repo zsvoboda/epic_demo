@@ -55,7 +55,7 @@ pureds local group create --gid 2100 epic_daemons
 
 # Local users
 { echo 'password'; echo 'password'; } | pureds local user create --password --uid 2101 --primary-group epic_daemons epic_daemon
-{ echo 'password'; echo 'password'; } | pureds local user create --password --uid 502 --primary-group zsvoboda zsvoboda
+{ echo 'password'; echo 'password'; } | pureds local user create --password --uid 502 --primary-group Administrators zsvoboda
 
 # Filesystem
 echo "Creating filesystem"
