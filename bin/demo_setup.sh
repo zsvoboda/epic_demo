@@ -2,7 +2,7 @@
 
 sudo mkdir -p /mnt/epic_exchange
 sudo chmod 777 /mnt/epic_exchange
-sudo mount -t nfs -o vers=3 ${FA_MOUNT_IP}:/EXCHANGE_ALL /mnt/epic_exchange/
+sudo mount -t nfs -o vers=3 ${FA_MOUNT_IP}:/EXCHANGE_ANONYMOUS /mnt/epic_exchange/
 
 if [ "$#" != "1" -o -z "$1" ]; then
     echo "Usage: $0 setup"
