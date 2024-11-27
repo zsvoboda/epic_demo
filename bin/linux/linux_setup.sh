@@ -14,8 +14,7 @@ if [ "$1" = "cleanup" ]; then
 fi
 
 if [ "$1" = "setup" ]; then
-    sudo addgroup --gid 2200 epic_daemons
-
+    sudo groupadd --gid 2200 epic_daemons
     sudo adduser --no-create-home --uid 2201 --gid 2200 epic_daemon_1
     sudo adduser --no-create-home --uid 2202 --gid 2200 epic_daemon_2
 
