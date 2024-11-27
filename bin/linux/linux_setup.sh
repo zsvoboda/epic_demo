@@ -7,9 +7,9 @@ if [ "$#" != "1" -o -z "$1" ]; then
 fi
 
 if [ "$1" = "cleanup" ]; then
-    sudo userdel -r epic_daemon_1
-    sudo userdel -r epic_daemon_2
-    sudo groupdel -r epic_daemons
+    sudo userdel -rf epic_daemon_1
+    sudo userdel -rf epic_daemon_2
+    sudo groupdel -f epic_daemons
     exit $?
 fi
 
