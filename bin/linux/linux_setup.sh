@@ -16,8 +16,8 @@ fi
 if [ "$1" = "setup" ]; then
     sudo addgroup --gid 2200 epic_daemons
 
-    sudo adduser --no-create-home --disabled-password  --uid 2201 --gid 2200 epic_daemon_1
-    sudo adduser --no-create-home --disabled-password  --uid 2202 --gid 2200 epic_daemon_2
+    sudo adduser --no-create-home --uid 2201 --gid 2200 epic_daemon_1
+    sudo adduser --no-create-home --uid 2202 --gid 2200 epic_daemon_2
 
     exit $?
 fi
