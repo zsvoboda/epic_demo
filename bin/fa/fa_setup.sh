@@ -14,7 +14,7 @@ pureds local user delete epic_daemon
 pureds local user delete zsvoboda
 
 # Delete local groups
-pureds local group delete epiepic_daemons
+pureds local group delete epic_daemons
 
 # Detach and remove the NFS export policy 
 echo "Removing NFS export policy"
