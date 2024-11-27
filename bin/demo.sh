@@ -27,6 +27,8 @@ fi
 if [ "$1" = "export" ]; then
     if [ -d /mnt/epic_exchange/export ]; then
         echo "Demo CSV Content" > /mnt/epic_exchange/export/export.csv
+    else
+        echo "Export directory does not exist."
     fi
 fi
 
