@@ -1,6 +1,5 @@
 #!/bin/bash
 
-sudo umount /mnt/epic_exchange
 sudo mkdir -p /mnt/epic_exchange
 sudo chmod 777 /mnt/epic_exchange
 sudo mount -t nfs -o vers=3 ${FA_MOUNT_IP}:/EXCHANGE /mnt/epic_exchange/
