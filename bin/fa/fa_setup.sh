@@ -18,11 +18,15 @@ pureds local group delete epic_daemons
 
 # Detach and remove the NFS export policy 
 purepolicy nfs remove --dir fs_epic:md_epic_exchange p_exchange_anonymous_nfs
+purepolicy nfs remove --dir fs_epic:md_epic_exchange p_exchange_nfs
 purepolicy nfs delete p_exchange_anonymous_nfs
+purepolicy nfs delete p_exchange_nfs
 
 # Detach and remove the SMB share policy
 purepolicy smb remove --dir fs_epic:md_epic_exchange p_exchange_anonymous_smb
 purepolicy smb delete p_exchange_anonymous_smb
+purepolicy smb remove --dir fs_epic:md_epic_exchange p_exchange_smb
+purepolicy smb delete p_exchange_smb
 
 # Delete the managed directory
 puredir delete fs_epic:md_epic_exchange
@@ -63,15 +67,22 @@ puredir create --path /home fs_epic:md_epic_exchange
 purepolicy nfs create --disable-user-mapping p_exchange_anonymous_nfs
 purepolicy nfs rule add --client "*" --all-squash --anonuid 2101 --anongid 2100 --version nfsv3 p_exchange_anonymous_nfs
 
+purepolicy nfs create --disable-user-mapping p_exchange_nfs
+purepolicy nfs rule add --client "*" --all-squash --anonuid 2101 --anongid 2100 --version nfsv3 p_exchange_nfs
+
 # NFS export
 purepolicy nfs add --dir fs_epic:md_epic_exchange --export-name EXCHANGE_ANONYMOUS p_exchange_anonymous_nfs
+purepolicy nfs add --dir fs_epic:md_epic_exchange --export-name EXCHANGE p_exchange_nfs
 
 # SMB share policy
 purepolicy smb create p_exchange_anonymous_smb
 purepolicy smb rule add --client "*" --anonymous-access-allowed p_exchange_anonymous_smb
+purepolicy smb create p_exchange_smb
+purepolicy smb rule add --client "*" p_exchange_smb
 
 # SMB share
 purepolicy smb add --dir fs_epic:md_epic_exchange --export-name EXCHANGE_ANONYMOUS p_exchange_anonymous_smb
+purepolicy smb add --dir fs_epic:md_epic_exchange --export-name EXCHANGE p_exchange_smb
 
 # restore stdout from fd3
 exec 1>&3
