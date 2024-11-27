@@ -20,5 +20,3 @@ if [ "$1" = "setup" ]; then
 
     exit $?
 fi
-
-

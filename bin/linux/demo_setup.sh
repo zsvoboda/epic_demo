@@ -14,7 +14,6 @@ fi
 if [ "$1" = "cleanup" ]; then
     sudo rm -rf /mnt/epic_exchange/export
     sudo rm -rf /mnt/epic_exchange/import
-    exit $?
 fi
 
 if [ "$1" = "setup" ]; then
@@ -22,5 +21,6 @@ if [ "$1" = "setup" ]; then
     sudo chown 2101:2100 /mnt/epic_exchange/export
     sudo mkdir /mnt/epic_exchange/import
     sudo chown 2101:2100 /mnt/epic_exchange/import
-    exit $?
 fi
+
+sudo umount /mnt/epic_exchange
