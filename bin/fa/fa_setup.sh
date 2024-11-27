@@ -53,7 +53,7 @@ set -o pipefail
 exec 3>&1
 exec 1>&2
 
-# Active Directory
+# Active Directory - please issue this command manually from the CLI 
 # puread account create --domain "c14-dom-a-ad1.local" --join-ou "CN=Computers" --tls required --computer-name "EpicFA" "EpicActiveDirectory"
 
 # Local groups
