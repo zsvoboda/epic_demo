@@ -10,7 +10,7 @@ if [ "$1" = "cleanup" ]; then
     ssh "root@${FA_CONTROLLER_IP}" bash << 'EOS'
 
 # Active Directory
-puread account delete EpicActiveDirectory
+# puread account delete EpicActiveDirectory
 
 # Delete local users
 pureds local user delete epic_daemon
@@ -54,7 +54,7 @@ exec 3>&1
 exec 1>&2
 
 # Active Directory
-puread account create --domain "c14-dom-a-ad1.local" --join-ou "CN=Computers" --tls required --computer-name "EpicFA" "EpicActiveDirectory"
+# puread account create --domain "c14-dom-a-ad1.local" --join-ou "CN=Computers" --tls required --computer-name "EpicFA" "EpicActiveDirectory"
 
 # Local groups
 pureds local group create --gid 2100 epic_daemons
