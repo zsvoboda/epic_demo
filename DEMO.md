@@ -122,7 +122,7 @@ This tutorial illustrates a simple scenario of Windows users interacting with th
 2. Create a new policy by clicking on the 'plus' icon in the `Export Policies` widget.
 3. Configure the following:
    - **Type**: SMB
-   - **Name**: `smb_epic_user_access_policy`
+   - **Name**: `smb_windows_user_access_policy`
    - Toggle the **Enabled** radio button to ON.
    - Use defaults for other settings.
 
@@ -148,7 +148,7 @@ This tutorial illustrates a simple scenario of Windows users interacting with th
    - **Export Name**: `EXCHANGE`
    - Toggle the **Enabled** radio button to ON.
    - **NFS Policy**: `nfs_epic_daemon_access_policy`
-   - **SMB Policy**: `smb_epic_user_access_policy`
+   - **SMB Policy**: `smb_windows_user_access_policy`
 
 4. Confirm creation.  
 

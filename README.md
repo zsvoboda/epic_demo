@@ -66,7 +66,7 @@ See the [`./bin/fa/fa_setup.sh`](./bin/fa/fa_setup.sh) script for more details.
 
 ### SMB Export Policy and Export
 
-The `smb_epic_user_access_policy` SMB export policies is defined.
+The `smb_windows_user_access_policy` SMB export policies is defined.
 
 The SMB policy is attached to the `epic_managed_directory` managed directory, resulting in the `EXCHANGE` SMB export.
 
@@ -87,7 +87,7 @@ See the [`./bin/fa/fa_setup.sh`](./bin/fa/fa_setup.sh) script for more details.
 2. Clone this repository:
 
 ```bash
-git clone [https://github.com/zsvoboda/epic_demo.git](https://github.com/zsvoboda/epic_demo.git)
+git clone https://github.com/zsvoboda/epic_demo.git
 ```
 
 3. Edit and source the [./bin/env.sh](./bin/env.sh)
