@@ -26,6 +26,7 @@ This demo illustrates a simple scenario of Windows users interacting with the Ep
 - Users on Epic servers interact via a text-based menu in the Epic application, with backend operations performed by Epic daemons using similarly low-numbered UIDs (e.g., 1000, 1001).
 
 **NOTE**: This demo uses FlashArray local users and groups for authentication purposes. If needed, Active Directory can be used for authentication without impacting functionality.
+
 ---
 
 ## Demo Introduction
