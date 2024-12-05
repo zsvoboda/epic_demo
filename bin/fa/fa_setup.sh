@@ -9,34 +9,28 @@ fi
 if [ "$1" = "cleanup" ]; then
     ssh "root@${FA_CONTROLLER_IP}" bash << 'EOS'
 
-# Active Directory
-# puread account delete EpicActiveDirectory
-
 # Delete local users
 pureds local user delete epic_daemon
-pureds local user delete zsvoboda
+pureds local user delete windows_user
 
 # Delete local groups
 pureds local group delete epic_daemons
+pureds local group delete windows_users
 
 # Detach and remove the NFS export policy 
-purepolicy nfs remove --dir fs_epic:md_epic_exchange p_exchange_anonymous_nfs
-purepolicy nfs remove --dir fs_epic:md_epic_exchange p_exchange_nfs
-purepolicy nfs delete p_exchange_anonymous_nfs
-purepolicy nfs delete p_exchange_nfs
+purepolicy nfs remove --dir epic_file_system:epic_managed_directory nfs_epic_daemon_access_policy
+purepolicy nfs delete nfs_epic_daemon_access_policy
 
 # Detach and remove the SMB share policy
-purepolicy smb remove --dir fs_epic:md_epic_exchange p_exchange_anonymous_smb
-purepolicy smb delete p_exchange_anonymous_smb
-purepolicy smb remove --dir fs_epic:md_epic_exchange p_exchange_smb
-purepolicy smb delete p_exchange_smb
+purepolicy smb remove --dir epic_file_system:epic_managed_directory smb_windows_user_access_policy
+purepolicy smb delete smb_windows_user_access_policy
 
 # Delete the managed directory
-puredir delete fs_epic:md_epic_exchange
+puredir delete epic_file_system:epic_managed_directory
 
 # Delete and eradicate the filesystem
-purefs destroy fs_epic
-purefs eradicate fs_epic
+purefs destroy epic_file_system
+purefs eradicate epic_file_system
 
 EOS
     exit $?
@@ -53,42 +47,33 @@ set -o pipefail
 exec 3>&1
 exec 1>&2
 
-# Active Directory - please issue this command manually from the CLI 
-# puread account create --domain "c14-dom-a-ad1.local" --join-ou "CN=Computers" --tls required --computer-name "EpicFA" "EpicActiveDirectory"
-
 # Local groups
-pureds local group create --gid 2100 epic_daemons
+pureds local group create --gid 1001 epic_daemons
+pureds local group create --gid 1002 windows_users
 
 # Local users
-{ echo 'password'; echo 'password'; } | pureds local user create --password --uid 2101 --primary-group epic_daemons epic_daemon
-{ echo 'password'; echo 'password'; } | pureds local user create --password --uid 502 --primary-group Administrators zsvoboda
+{ echo 'password'; echo 'password'; } | pureds local user create --password --uid 1001 --primary-group epic_daemons epic_daemon
+{ echo 'password'; echo 'password'; } | pureds local user create --password --uid 1002 --primary-group windows_users windows_user
 
 # Filesystem
-purefs create fs_epic
+purefs create epic_file_system
 
 # Managed directory
-puredir create --path /home fs_epic:md_epic_exchange
+puredir create --path /home epic_file_system:epic_managed_directory
 
 # NFS export policy
-purepolicy nfs create --disable-user-mapping p_exchange_anonymous_nfs
-purepolicy nfs rule add --client "*" --all-squash --anonuid 2101 --anongid 2100 --version nfsv3 p_exchange_anonymous_nfs
-
-purepolicy nfs create --disable-user-mapping p_exchange_nfs
-purepolicy nfs rule add --client "*" --all-squash --anonuid 2101 --anongid 2100 --version nfsv3 p_exchange_nfs
+purepolicy nfs create --disable-user-mapping nfs_epic_daemon_access_policy
+purepolicy nfs rule add --client "*" --all-squash --anonuid 1001 --anongid 1001 --version nfsv3 nfs_epic_daemon_access_policy
 
 # NFS export
-purepolicy nfs add --dir fs_epic:md_epic_exchange --export-name EXCHANGE_ANONYMOUS p_exchange_anonymous_nfs
-purepolicy nfs add --dir fs_epic:md_epic_exchange --export-name EXCHANGE p_exchange_nfs
+purepolicy nfs add --dir epic_file_system:epic_managed_directory --export-name EXCHANGE nfs_epic_daemon_access_policy
 
 # SMB share policy
-purepolicy smb create p_exchange_anonymous_smb
-purepolicy smb rule add --client "*" --anonymous-access-allowed p_exchange_anonymous_smb
-purepolicy smb create p_exchange_smb
-purepolicy smb rule add --client "*" p_exchange_smb
+purepolicy smb create smb_windows_user_access_policy
+purepolicy smb rule add --client "*" smb_windows_user_access_policy
 
 # SMB share
-purepolicy smb add --dir fs_epic:md_epic_exchange --export-name EXCHANGE_ANONYMOUS p_exchange_anonymous_smb
-purepolicy smb add --dir fs_epic:md_epic_exchange --export-name EXCHANGE p_exchange_smb
+purepolicy smb add --dir epic_file_system:epic_managed_directory --export-name EXCHANGE smb_windows_user_access_policy
 
 # restore stdout from fd3
 exec 1>&3

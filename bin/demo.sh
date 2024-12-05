@@ -1,8 +1,8 @@
 #!/bin/bash
 
-sudo mkdir -p /mnt/epic_exchange
-sudo chmod 777 /mnt/epic_exchange
-sudo mount -t nfs -o vers=3 ${FA_MOUNT_IP}:/EXCHANGE /mnt/epic_exchange/
+sudo mkdir -p /mnt/epic
+sudo chmod 777 /mnt/epic
+sudo mount -t nfs -o vers=3 ${FA_MOUNT_IP}:/EXCHANGE /mnt/epic/
 
 if [ "$#" != "1" -o -z "$1" ]; then
     echo "Usage: $0 import"
@@ -11,8 +11,8 @@ if [ "$#" != "1" -o -z "$1" ]; then
 fi
 
 if [ "$1" = "import" ]; then
-    if [ -d /mnt/epic_exchange/import ]; then
-        for FILE in /mnt/epic_exchange/import/*; do
+    if [ -d /mnt/epic/import ]; then
+        for FILE in /mnt/epic/import/*; do
             if [ -f "$FILE" ]; then
                 echo "Importing: $FILE"
                 cat "$FILE"
@@ -25,11 +25,11 @@ if [ "$1" = "import" ]; then
 fi
 
 if [ "$1" = "export" ]; then
-    if [ -d /mnt/epic_exchange/export ]; then
-        echo "Demo CSV Content" > /mnt/epic_exchange/export/export.csv
+    if [ -d /mnt/epic/export ]; then
+        echo "Exported CSV data" > /mnt/epic/export/demo_export.csv
     else
         echo "Export directory does not exist."
     fi
 fi
 
-sudo umount /mnt/epic_exchange
+sudo umount /mnt/epic

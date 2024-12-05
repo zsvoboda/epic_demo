@@ -1,8 +1,8 @@
 #!/bin/bash
 
-sudo mkdir -p /mnt/epic_exchange
-sudo chmod 777 /mnt/epic_exchange
-sudo mount -t nfs -o vers=3 ${FA_MOUNT_IP}:/EXCHANGE /mnt/epic_exchange/
+sudo mkdir -p /mnt/epic
+sudo chmod 777 /mnt/epic
+sudo mount -t nfs -o vers=3 ${FA_MOUNT_IP}:/EXCHANGE /mnt/epic/
 
 if [ "$#" != "1" -o -z "$1" ]; then
     echo "Usage: $0 setup"
@@ -11,17 +11,17 @@ if [ "$#" != "1" -o -z "$1" ]; then
 fi
 
 if [ "$1" = "cleanup" ]; then
-    sudo rm -rf /mnt/epic_exchange/export
-    sudo rm -rf /mnt/epic_exchange/import
+    sudo rm -rf /mnt/epic/export
+    sudo rm -rf /mnt/epic/import
 fi
 
 if [ "$1" = "setup" ]; then
-    sudo mkdir /mnt/epic_exchange/export
-    sudo chown 2101:2100 /mnt/epic_exchange/export
-    sudo chmod 744 /mnt/epic_exchange/export
-    sudo mkdir /mnt/epic_exchange/import
-    sudo chown 2101:2100 /mnt/epic_exchange/import
-    sudo chmod 777 /mnt/epic_exchange/import
+    sudo mkdir /mnt/epic/export
+    sudo chown 1001:1001 /mnt/epic/export
+    sudo chmod 744 /mnt/epic/export
+    sudo mkdir /mnt/epic/import
+    sudo chown 1001:1001 /mnt/epic/import
+    sudo chmod 777 /mnt/epic/import
 fi
 
-sudo umount /mnt/epic_exchange
+sudo umount /mnt/epic
