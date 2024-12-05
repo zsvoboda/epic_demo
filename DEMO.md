@@ -163,6 +163,10 @@ First, find out your FlashArray's File Services virtual interface IP address:
 
 ## Step 9: Mount the NFS Directory on Linux
 
+The Linux machine represents the environment where the Epic application daemons are executed.
+
+To set up the demo, we’ll start by mounting the FlashArray’s remote directory over NFS and creating the Epic import and export directories within the FlashArray’s export.
+
 1. Create a mount point:
 
    ```bash
@@ -175,26 +179,20 @@ First, find out your FlashArray's File Services virtual interface IP address:
    sudo mount -t nfs -o nfsvers=3 192.168.1.60:/epic_managed_directory /mnt/epic
    ```
 
----
-
-## Step 10: Create Import and Export Subdirectories
-
-1. On the Linux machine:
+3. Create the Epic Import and Export Subdirectories
 
    ```bash
    sudo mkdir /mnt/epic/import /mnt/epic/export
    ```
 
----
+4. Set the Directory Permissions
 
-## Step 11: Set Permissions
-
-1. Allow read/write for everyone on `import`:
+- Allow read/write for everyone on `import`:
 
    ```bash
    sudo chmod 777 /mnt/epic/import
    ```
-2. Allow read-write for owner/group and read-only for others on `export`:
+- Allow read-write for owner/group and read-only for others on `export`:
 
    ```bash
    sudo chmod 774 /mnt/epic/export
@@ -202,7 +200,10 @@ First, find out your FlashArray's File Services virtual interface IP address:
 
 ---
 
-## Step 12: Add Files
+## Step 10: Add Files
+
+Next, we’ll simulate the Epic export functionality by creating a new file in the `export` directory.
+
 1. In the `export` directory, create a file:
 
    ```bash
@@ -211,7 +212,10 @@ First, find out your FlashArray's File Services virtual interface IP address:
 
 ---
 
-## Step 13: Map SMB Share on Windows
+## Step 11: Map SMB Share on Windows
+
+The Windows machine represents the workstation of an Epic end user.
+
 1. Open File Explorer.
 2. Map a network drive using:
 
@@ -220,13 +224,17 @@ First, find out your FlashArray's File Services virtual interface IP address:
 
 ---
 
-## Step 14: Verify SMB Access
+## Step 12: Verify End User's SMB Access
+
+This step simulates an end user accessing a file exported by the Epic application.
 
 1. Open the `export_demo.csv` file to ensure it is readable.
 
 ---
 
-## Step 15: Add File from Windows
+## Step 13: Upload End User's File from Windows
+
+This step simulates an end user uploading a file to the Epic application.
 
 1. Create a file `import_demo.txt` with content:
 
@@ -237,11 +245,14 @@ First, find out your FlashArray's File Services virtual interface IP address:
 
 ---
 
-## Step 16: Verify NFS Access from Linux
+## Step 14: Verify NFS Access from Linux
+
+This step simulates the Epic application accessing the file uploaded by an end user.
+
 1. On the Linux machine:
 
    ```bash
    cat /mnt/epic/import/import_demo.txt
    ```
    Confirm that the content is visible.
-   
+
