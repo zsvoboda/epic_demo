@@ -21,22 +21,18 @@ This demo illustrates a simple scenario of Windows users interacting with the Ep
 
 ## Environment Details
 
-- Windows users are authenticated against Active Directory.
+- All users are authenticated against Local users and groups.
 - Epic servers use low-numbered UIDs/GIDs (e.g., 1000, 1001, 1002).
 - Users on Epic servers interact via a text-based menu in the Epic application, with backend operations performed by Epic daemons using similarly low-numbered UIDs (e.g., 1000, 1001).
 
+**NOTE**: This demo uses FlashArray local users and groups for authentication purposes. If needed, Active Directory can be used for authentication without impacting functionality.
 ---
 
 ## Demo Introduction
 
-This demo showcases two different scenarios:
-
-- **Authenticated access:** Windows users authenticate against Active Directory.
-- **Anonymous access:** The SMB share allows anonymous access.
-
 ### File System and Managed Directory Setup
 
-The demo creates a file system called `fs_epic` with a managed directory called `md_epic_exchange`.
+The demo creates a file system called `epic_file_system` with a managed directory called `epic_managed_directory`.
 
 See the [`./bin/fa/fa_setup.sh`](./bin/fa/fa_setup.sh) script for more details.
 
@@ -51,47 +47,27 @@ See the [`./bin/demo_setup.sh`](./bin/demo_setup.sh) script for more details.
 
 ### Users and Groups
 
-The demo utilizes local users for NFS access. All NFS access from Epic daemons (with UIDs around 1000) are squashed (`all-squash`) to a single user called `epic_daemon` (UID: 2101). This user is a member of the `epic_daemons` local group (GID: 2100).
+The demo utilizes local users for NFS access. All NFS access from Epic daemons (with UIDs around 1000) are squashed (`all-squash`) to a single user called `epic_daemon` (UID: 1001). This user is a member of the `epic_daemons` local group (GID: 1001).
 
 See the [`./bin/fa/fa_setup.sh`](./bin/fa/fa_setup.sh) script for more details.
 
-The authenticated demo scenario employs Active Directory for SMB authentication.  A user `c14-dom-a-ad1\zsvoboda_ad` (your username and domain will be different) is used, which has no UID and GID (no `uidNumber` and `gidNumber` attributes set in Active Directory).
+### NFS Export Policy and Export
+
+The `nfs_epic_daemon_access_policy` NFS export policy is defined on the FlashArray:
+
+The policy utilizes the `all-squash` NFS export option, impersonating every user's access as the `epic_daemon` user (UID: 1001). User mapping is disabled, meaning access from Epic Linux daemons is not authenticated. This can be easily modified to enable user mapping. In that case, ensure that users with all daemon UIDs are defined in the FlashArray's local user database.
+
+The policy uses the NFSv3 protocol. NFSv4.1 can also be used if required.
+
+The policy is attached to the `epic_managed_directory` managed directory, resulting in the `EXCHANGE` NFS export.
 
 See the [`./bin/fa/fa_setup.sh`](./bin/fa/fa_setup.sh) script for more details.
 
-### NFS Export Policies and Exports
+### SMB Export Policy and Export
 
-Two NFS export policies are defined on the FlashArray:
+The `smb_epic_user_access_policy` SMB export policies is defined.
 
-- `p_exchange_nfs`: For the anonymous access scenario.
-- `p_exchange_anonymous_nfs`: For the Active Directory authenticated access scenario.
-
-Currently, both policies are identical. They utilize the `all-squash` NFS export option, impersonating every user's access as the `epic_daemon` user (UID: 2101). User mapping is disabled in both policies, meaning access from Epic Linux daemons is not authenticated. This can be easily modified to enable user mapping. In that case, ensure that users with all daemon UIDs are defined in the FlashArray's local user database or in Active Directory (with the `uidNumber` attribute).
-
-Both export policies use the NFSv3 protocol. NFSv4.1 can also be used if required.
-
-Both policies are attached to the `md_epic_exchange` managed directory, resulting in two NFS exports:
-
-- `EXCHANGE`: NFSv3 export.
-- `EXCHANGE_ANONYMOUS`: NFSv3 export.
-
-Currently, these two exports are identical.
-
-See the [`./bin/fa/fa_setup.sh`](./bin/fa/fa_setup.sh) script for more details.
-
-### SMB Export Policies and Exports
-
-Two SMB export policies are defined:
-
-- `p_exchange_smb`: For the anonymous access scenario.
-- `p_exchange_anonymous_smb`:  For the Active Directory authenticated access scenario.
-
-`p_exchange_smb` does not allow anonymous SMB access, while `p_exchange_anonymous_smb` does.
-
-Both SMB policies are attached to the `md_epic_exchange` managed directory, resulting in two SMB exports:
-
-- `EXCHANGE`: SMB export for Active Directory authenticated access.
-- `EXCHANGE_ANONYMOUS`: SMB export for anonymous access.
+The SMB policy is attached to the `epic_managed_directory` managed directory, resulting in the `EXCHANGE` SMB export.
 
 See the [`./bin/fa/fa_setup.sh`](./bin/fa/fa_setup.sh) script for more details.
 
@@ -101,8 +77,7 @@ See the [`./bin/fa/fa_setup.sh`](./bin/fa/fa_setup.sh) script for more details.
 
 1. A Linux machine (using GNU/Linux in this example) to simulate the Epic application and daemons.
 2. A Windows machine to simulate the end user's workstation.
-3. A FlashArray with File Services enabled, File Virtual Network Interface enabled, and joined to an Active Directory domain.
-4. An Active Directory user. The demo uses `c14-dom-a-ad1\zsvoboda_ad`, which has no UID and GID (no `uidNumber` and `gidNumber` attributes set in Active Directory).
+3. A FlashArray with File Services enabled, and File Virtual Network Interface enabled.
 
 ## Demo Setup
 
@@ -146,19 +121,15 @@ cd epic_demo
 ./bin/demo.sh export
 ```
 
-This simulates the Epic application exporting a file by creating an `export.csv` file with sample content in the shared `export` directory.
+This simulates the Epic application exporting a file by creating an `demo_export.csv` file with sample content in the shared `export` directory.
 
 3. On the Windows machine, map the FlashArray share via SMB:
 
-- **For Active Directory authenticated access:** In Windows Explorer, right-click on This PC, select "Map network drive...", and enter `\\192.168.1.60\EXCHANGE` in the "Folder:" field. Check the "Connect using different credentials" box and provide the Active Directory user credentials (`c14-dom-a-ad1\zsvoboda_ad` in this example, but your username and domain will likely differ). The mapped directory should contain both `import` and `export` subdirectories. Observe the directory and file permissions (ACLs), which are translated from the Linux mode bits set during the demo setup (refer to [./bin/demo_setup.sh](./bin/demo_setup.sh) for details).
+- In Windows Explorer, right-click on This PC, select "Map network drive...", and enter `\\192.168.1.60\EXCHANGE` in the "Folder:" field. Check the "Connect using different credentials" box and provide the user credentials (`domain\windows_user`). The mapped directory should contain both `import` and `export` subdirectories. Observe the directory and file permissions (ACLs), which are translated from the Linux mode bits set during the demo setup (refer to [./bin/demo_setup.sh](./bin/demo_setup.sh) for details).
 
-- **For anonymous access:** In Windows Explorer, right-click on This PC, select "Map network drive...", and enter `\\192.168.1.60\EXCHANGE_ANONYMOUS` in the "Folder:" field. The mapped directory should contain both `import` and `export` subdirectories.  Observe the directory and file permissions, which were set during the demo setup (refer to [./bin/demo_setup.sh](./bin/demo_setup.sh) for details).
+4. Open the `export\demo_export.csv` file using a text editor (e.g., Notepad) to simulate a Windows user accessing an exported file from Epic.
 
-**Note:** File and directory permissions will differ between the authenticated and anonymous access methods. 
-
-4. Open the `export\export.csv` file using a text editor (e.g., Notepad) to simulate a Windows user accessing an exported file from Epic.
-
-5. Create a new file named `test.txt` within the `import` directory and add some text content. This simulates a user uploading a file to Epic.
+5. Create a new file named `import_demo.txt` within the `import` directory and add some text content. This simulates a user uploading a file to Epic.
 
 6. Return to the Linux machine, navigate to the repository directory, and execute the Epic import simulation:
 
@@ -167,7 +138,7 @@ cd epic_demo
 ./bin/demo.sh import
 ```
 
-The content of the `import/test.txt` file created in the previous step should be displayed on the console, simulating the Epic application importing the file.
+The content of the `import/import_demo.txt` file created in the previous step should be displayed on the console, simulating the Epic application importing the file.
 
 ## Summary
 This demo illustrates how FlashArray File Services can effectively and securely handle mixed-protocol environments, making it a suitable storage solution for applications like Epic that require multiprotocol access and seamless cross-platform collaboration.

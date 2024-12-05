@@ -112,6 +112,9 @@ This tutorial illustrates a simple scenario of Windows users interacting with th
    
 8. Confirm creation.   
 
+**NOTE**: The policy utilizes the `all-squash` NFS export option, impersonating every user's access as the `epic_daemon` user (UID: 1001). User mapping is disabled, meaning access from Epic Linux daemons is not authenticated. This can be easily modified to enable user mapping. In that case, ensure that users with all daemon UIDs are defined in the FlashArray's local user database.
+
+**NOTE**: The NFS policy uses the NFSv3 protocol. NFSv4.1 can also be used if required.
 ---
 
 ## Step 6: Create SMB Policy
@@ -321,3 +324,7 @@ This step simulates the Epic application accessing the file uploaded by an end u
    
    The Linux user simulating the Epic daemon has access to the file's content.
 
+# Summary
+This demo illustrates how FlashArray File Services can effectively and securely handle mixed-protocol environments, making it a suitable storage solution for applications like Epic that require multiprotocol access and seamless cross-platform collaboration.
+
+For any questions or comments regarding this demo, please contact zsvoboda@purestorage.com.
