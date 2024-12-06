@@ -3,6 +3,8 @@
 
 This tutorial illustrates a simple scenario of Windows users interacting with the Epic application. Users can seamlessly **import files into Epic** (e.g., PDF documents) and **export files from Epic** (e.g., CSV files) through a shared FlashArray-managed directory. This shared directory supports **multiprotocol access**, enabling communication via both an **NFSv3 mount** (for Epic application daemons on Linux servers) and an **SMB mapped drive** (for Windows users). The key objective is to demonstrate how Epic servers (Linux) and Windows users can collaboratively access and interact with the same share for reading and writing files.
 
+The solution leverages NFS root squashing, where all Epic application processes (daemons) are squashed (impersonated) to a common user (`epic_daemon`) that owns all exported files. Additionally, it utilizes Windows permission inheritance, ensuring that all new files uploaded by Windows users inherit their permissions from the parent directory (`import`).
+
 **NOTE**: This demo uses FlashArray local users and groups for authentication purposes. If needed, Active Directory can be used for authentication without impacting functionality.
 
 ---
