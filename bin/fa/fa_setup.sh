@@ -38,7 +38,7 @@ fi
 
 if [ "$1" = "setup" ]; then
 
-{ echo $FA_ADMIN_PASSWORD; echo $FA_ADMIN_PASSWORD; } | ssh "${FA_ADMIN_USER}@${FA_CONTROLLER_IP}" bash << 'EOS'
+{ echo $FA_ADMIN_PASSWORD; echo $FA_ADMIN_PASSWORD; } | ssh "${FA_ADMIN_USER}@${FA_CONTROLLER_IP}" sh << 'EOS'
 
 set -eu
 set -o pipefail
