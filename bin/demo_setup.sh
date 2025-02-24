@@ -1,8 +1,8 @@
 #!/bin/bash
 
-sudo mkdir -p /mnt/epic
-sudo chmod 777 /mnt/epic
-sudo mount -t nfs -o vers=3 ${FA_MOUNT_IP}:/EXCHANGE /mnt/epic/
+sudo mkdir -p $MOUNT_ROOT
+sudo chmod 777 $MOUNT_ROOT
+sudo mount -t nfs -o vers=3 ${FA_MOUNT_IP}:/EXCHANGE $MOUNT_ROOT
 
 if [ "$#" != "1" -o -z "$1" ]; then
     echo "Usage: $0 setup"
@@ -11,17 +11,17 @@ if [ "$#" != "1" -o -z "$1" ]; then
 fi
 
 if [ "$1" = "cleanup" ]; then
-    sudo rm -rf /mnt/epic/export
-    sudo rm -rf /mnt/epic/import
+    sudo rm -rf $MOUNT_ROOT/export
+    sudo rm -rf $MOUNT_ROOT/import
 fi
 
 if [ "$1" = "setup" ]; then
-    sudo mkdir /mnt/epic/export
-    sudo chown 1001:1001 /mnt/epic/export
-    sudo chmod 744 /mnt/epic/export
-    sudo mkdir /mnt/epic/import
-    sudo chown 1001:1001 /mnt/epic/import
-    sudo chmod 777 /mnt/epic/import
+    sudo mkdir $MOUNT_ROOT/export
+    sudo chown 1001:1001 $MOUNT_ROOT/export
+    sudo chmod 744 $MOUNT_ROOT/export
+    sudo mkdir $MOUNT_ROOT/import
+    sudo chown 1001:1001 $MOUNT_ROOT/import
+    sudo chmod 777 $MOUNT_ROOT/import
 fi
 
-sudo umount /mnt/epic
+sudo umount $MOUNT_ROOT
